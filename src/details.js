@@ -1,6 +1,10 @@
 import React from "react";
 import pet from "@frontendmasters/pet";
 import Carousel from "./carousel";
+import ErrorBoundary from "./ErrorBoundary";
+import ThemeContext from "./ThemeContext";
+import { navigate } from "@reach/router";
+import Modal from "./modal";
 
 class Details extends React.Component {
   state = { loading: true }; //Proposal for JS but not a real thing quite yet.
@@ -9,6 +13,7 @@ class Details extends React.Component {
     //Arrow function is must for `this` usage in class components
     pet.animal(this.props.id).then(({ animal }) => {
       this.setState({
+        url: animal.url,
         name: animal.name,
         animal: animal.type,
         location: `${animal.contact.address.city}, ${animal.contact.address.state}`,
@@ -19,24 +24,65 @@ class Details extends React.Component {
       });
     }, console.error());
   }
+
+  toggleModal = () => this.setState({ showModal: !this.state.showModal });
+  adopt = () => navigate(this.state.url);
+
   render() {
     if (this.state.loading) {
       return <h1>Loading...</h1>;
     }
-    const { animal, breed, location, description, name, media } = this.state;
+    const {
+      animal,
+      breed,
+      location,
+      description,
+      name,
+      media,
+      showModal
+    } = this.state;
 
     return (
+      //<ErrorBoundary> not here, as we use it as a higher order component.
       <div className="details">
         <Carousel media={media} />
         <div>
           <h1>{name}</h1>
           <h2>{`${animal} - ${breed} - ${location}`}</h2>
-          <button>Adopt {name}</button>
+          <ThemeContext.Consumer>
+            {(themeHook) => (
+              <button
+                onClick={this.toggleModal}
+                style={{ backgroundColor: themeHook[0] }}
+              >
+                Adopt {name}
+              </button>
+            )}
+          </ThemeContext.Consumer>
           <p>{description}</p>
+          {showModal ? (
+            <Modal>
+              <div>
+                <h1>Would you like to adopt {name}</h1>
+                <div className="buttons">
+                  <button onClick={this.adopt}>Yes</button>
+                  <button onClick={this.toggleModal}>
+                    No, I am a monster.
+                  </button>
+                </div>
+              </div>
+            </Modal>
+          ) : null}
         </div>
       </div>
     );
   }
 }
 
-export default Details;
+export default function DetailsWithErrorBoundary(props) {
+  return (
+    <ErrorBoundary>
+      <Details {...props} />
+    </ErrorBoundary>
+  );
+}
