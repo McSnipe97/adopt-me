@@ -3,7 +3,7 @@ import React from "react";
 class Carousel extends React.Component {
   state = {
     photos: [],
-    active: 0
+    active: 0,
   };
 
   static getDerivedStateFromProps({ media }) {
@@ -18,7 +18,7 @@ class Carousel extends React.Component {
   //arrow function to fix the `this` context
   handleIndexClick = (event) => {
     this.setState({
-      active: +event.target.dataset.index //+ for converting str to int
+      active: +event.target.dataset.index, //+ for converting str to int
     });
   };
 

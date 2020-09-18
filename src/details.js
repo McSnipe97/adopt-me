@@ -7,7 +7,7 @@ import { navigate } from "@reach/router";
 import Modal from "./modal";
 
 class Details extends React.Component {
-  state = { loading: true }; //Proposal for JS but not a real thing quite yet.
+  state = { loading: true, showModal: false }; //Proposal for JS but not a real thing quite yet.
 
   componentDidMount() {
     //Arrow function is must for `this` usage in class components
@@ -20,7 +20,8 @@ class Details extends React.Component {
         description: animal.description,
         media: animal.photos,
         breed: animal.breeds.primary,
-        loading: false
+        loading: false,
+        showModal: false
       });
     }, console.error());
   }
@@ -50,10 +51,10 @@ class Details extends React.Component {
           <h1>{name}</h1>
           <h2>{`${animal} - ${breed} - ${location}`}</h2>
           <ThemeContext.Consumer>
-            {(themeHook) => (
+            {(theme) => (
               <button
                 onClick={this.toggleModal}
-                style={{ backgroundColor: themeHook[0] }}
+                style={{ backgroundColor: theme[0] }}
               >
                 Adopt {name}
               </button>
@@ -62,14 +63,10 @@ class Details extends React.Component {
           <p>{description}</p>
           {showModal ? (
             <Modal>
-              <div>
-                <h1>Would you like to adopt {name}</h1>
-                <div className="buttons">
-                  <button onClick={this.adopt}>Yes</button>
-                  <button onClick={this.toggleModal}>
-                    No, I am a monster.
-                  </button>
-                </div>
+              <h1>Would you like to adopt {name}?</h1>
+              <div className="buttons">
+                <button onClick={this.adopt}>Yes</button>
+                <button onClick={this.toggleModal}>No, I am a monster.</button>
               </div>
             </Modal>
           ) : null}

@@ -1,8 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
+import { navigate } from "@reach/router";
 import pet, { ANIMALS } from "@frontendmasters/pet";
 import Results from "./results";
 import useDropdown from "./useDropdown";
 import ThemeContext from "./ThemeContext";
+
+const mcsnipe = "https://mcsnipe.tech";
+
+const website = () => navigate(mcsnipe);
 
 const SearchParams = () => {
   const [location, setLocation] = useState("Seattle, WA");
@@ -56,16 +61,28 @@ const SearchParams = () => {
             value={theme}
             onChange={(e) => setTheme(e.target.value)}
             onBlur={(e) => setTheme(e.target.value)}
-          />
-          <option value="peru">Peru</option>
-          <option value="cyan">Cyan</option>
-          <option value="darkblue">darkblue</option>
-          <option value="mediumorchid">Medium Orchid</option>
-          <option value="chartreuse">Chartreuse</option>
+          >
+            <option value="peru">Peru</option>
+            <option value="cyan">Cyan</option>
+            <option value="darkblue">darkblue</option>
+            <option value="mediumorchid">Medium Orchid</option>
+            <option value="chartreuse">Chartreuse</option>
+          </select>
         </label>
         <button style={{ backgroundColor: theme }}>Submit</button>
       </form>
       <Results pets={pets} />
+      <div className="search">
+        <p>
+          This website is developed using the{" "}
+          <strong>Complete Intro to React-v5</strong> course from
+          frontendmasters.com
+        </p>
+        <p>Thank you for checking this out! Check my portfolio here:</p>
+        <button onClick={website} style={{ backgroundColor: theme }}>
+          mcsnipe.tech
+        </button>
+      </div>
     </div>
   );
 };
